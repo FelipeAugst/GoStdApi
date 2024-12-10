@@ -1,13 +1,24 @@
 package routes
 
+import "api/src/controllers"
+
 var Users = []Route{{
-	Url:     "POST /users/create",
-	Handler: nil,
+	Url:     "/users/create",
+	Method:  "POST",
+	Handler: controllers.CreateUser,
 },
-	{Url: "GET /users",
-		Handler: nil,
+	{Url: "/users/",
+		Method:  "GET",
+		Handler: controllers.GetUsers,
 	},
 
-	{Url: "GET /users/{id}",
-		Handler: nil},
+	{Url: "/users/{id}",
+		Method:  "GET",
+		Handler: controllers.FindUser},
+	{Url: "/users/{id}/update",
+		Method:  "PUT",
+		Handler: controllers.UpdateUser},
+	{Url: "/users/{id}/delete",
+		Method:  "DELETE",
+		Handler: controllers.DeleteUser},
 }

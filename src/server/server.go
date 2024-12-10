@@ -33,7 +33,8 @@ func NewServer(url, port string) Server {
 	s := new(standardServer)
 	s.mux = http.NewServeMux()
 	s.server = &http.Server{
-		Addr: fmt.Sprintf("%s:%s", url, port),
+		Addr:    fmt.Sprintf("%s%s", url, port),
+		Handler: s.mux,
 	}
 	s.Config()
 	return s

@@ -9,5 +9,5 @@ type Route struct {
 }
 
 func (r Route) GetWildCard() string {
-	return r.Method + "" + r.Url
+	return r.Method + " " + r.Url
 }

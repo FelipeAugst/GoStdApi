@@ -18,18 +18,33 @@ type userRepository struct {
 	db *sql.DB
 }
 
-func (u *userRepository) Create(models.User) error {
-	panic("unimplemented")
+func (u *userRepository) Create(user models.User) error {
+	defer u.db.Close()
+	sttmnt, err := u.db.Prepare(
+		"INSERT INTO USERS(NAME,EMAIL,NICKNAME,PASSWORD) VALUES(?,?,?,?)")
+	if err != nil {
+		return err
+	}
+	defer sttmnt.Close()
+	if _, err := sttmnt.Exec(user.Name, user.Email, user.Nickname, user.Password); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *userRepository) Delete(id uint64) error {
-	panic("unimplemented")
+	_, err := u.db.Query(`DELETE FROM USERS
+	WHERE ID=?`, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *userRepository) Find(id uint64) (models.User, error) {
 	defer u.db.Close()
-	result, err := u.db.Query(`select ID,Name,Email,Nickname from users
-	where id=? `)
+	result, err := u.db.Query(`SELECT ID,NAME,EMAIL,NICKNAME,PASSWORD FROM USERS
+	WHERE ID=?`, id)
 	if err != nil {
 		return models.User{}, err
 	}
@@ -40,11 +55,12 @@ func (u *userRepository) Find(id uint64) (models.User, error) {
 		}
 
 	}
+	return user, nil
 
 }
 
 func (u *userRepository) Get() ([]models.User, error) {
-	query := "Select ID,Name,Email,Nickname from users;"
+	query := "SELECT ID,NAME,EMAIL,NICKNAME,PASSWORD FROM USERS;"
 	rows, err := u.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -64,11 +80,11 @@ func (u *userRepository) Get() ([]models.User, error) {
 
 func (u *userRepository) Update(user models.User) error {
 	defer u.db.Close()
-	stmnt, err := u.db.Prepare(`Update Users
-	set name=?,
-	email=?,
-	nickname=?
-	where id=?`)
+	stmnt, err := u.db.Prepare(`UPDATE USERS
+	SET NAME=?,
+	EMAIL=?,
+	NICKNAME=?
+	WHERE ID=?`)
 	if err != nil {
 		return err
 	}
@@ -81,7 +97,7 @@ func (u *userRepository) Update(user models.User) error {
 }
 
 func NewUserRepository() (UserRepository, error) {
-	db, err := db.Connect("")
+	db, err := db.Connect("felipe:felipe@/TEST")
 	if err != nil {
 		return &userRepository{}, err
 	}
