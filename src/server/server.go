@@ -1,6 +1,7 @@
 package server
 
 import (
+	"api/src/middlewares"
 	"api/src/server/routes"
 	"fmt"
 	"net/http"
@@ -21,7 +22,7 @@ func (s *standardServer) Config() {
 
 	s.routes = append(s.routes, routes.Users...)
 	for _, route := range s.routes {
-		s.mux.Handle(route.GetWildCard(), route.Handler)
+		s.mux.Handle(route.GetWildCard(), middlewares.Logger(route.Handler))
 	}
 }
 
