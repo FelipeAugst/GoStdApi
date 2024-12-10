@@ -1,6 +1,10 @@
 package db
 
-import "database/sql"
+import (
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
+)
 
 func Open(url string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", url)
