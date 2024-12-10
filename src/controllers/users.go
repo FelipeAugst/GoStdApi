@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"api/src/controllers/views"
 	"api/src/models"
 	"api/src/repository"
+	"api/src/views"
 	"encoding/json"
 	"io"
 	"net/http"
