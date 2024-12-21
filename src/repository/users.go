@@ -33,6 +33,7 @@ func (u *userRepository) Create(user models.User) error {
 }
 
 func (u *userRepository) Delete(id uint64) error {
+	defer u.db.Close()
 	_, err := u.db.Query(`DELETE FROM USERS
 	WHERE ID=?`, id)
 	if err != nil {
@@ -60,12 +61,13 @@ func (u *userRepository) Find(id uint64) (models.User, error) {
 }
 
 func (u *userRepository) Get() ([]models.User, error) {
+	defer u.db.Close()
 	query := "SELECT ID,NAME,EMAIL,NICKNAME,PASSWORD FROM USERS;"
 	rows, err := u.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
-	defer u.db.Close()
+
 	var users []models.User
 	var user models.User
 

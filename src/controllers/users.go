@@ -111,9 +111,11 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	repo, err := repository.NewUserRepository()
 	if err != nil {
 		views.Error(w, http.StatusInternalServerError, err)
+		return
 	}
 	if err := repo.Delete(id); err != nil {
 		views.Error(w, http.StatusInternalServerError, err)
+		return
 	}
 	views.ToJSON(w, http.StatusNoContent, nil)
 }
